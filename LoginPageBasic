@@ -1,0 +1,124 @@
+package com.example.demo1;
+
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class LoginPage extends Application {
+
+    @Override
+    public void start(Stage primaryStage) {
+        // Create UI components
+        Label emailLabel = new Label("Email:");
+        TextField emailField = new TextField();
+
+        Label passwordLabel = new Label("Password:");
+        PasswordField passwordField = new PasswordField();
+
+        Button loginButton = new Button("Login");
+
+        // Error message label (initially hidden)
+        Label errorLabel = new Label();
+        errorLabel.setStyle("-fx-text-fill: red; -fx-font-size: 12px;");
+
+        // Forgot Password Link
+        Hyperlink forgotPasswordLink = new Hyperlink("Forgot Password?");
+        forgotPasswordLink.setOnAction(e -> {
+            // Handle the "Forgot Password" action (open reset password page or dialog)
+            System.out.println("Redirecting to reset password page...");
+        });
+
+        // Set button action
+        loginButton.setOnAction(e -> {
+            String email = emailField.getText();
+            String password = passwordField.getText();
+
+            // Authenticate based on the email
+            String role = authenticate(email, password);
+
+            if (role != null) {
+                // Redirect to corresponding panel
+                switch (role) {
+                    case "admin":
+                        showAdminPanel(primaryStage);
+                        break;
+                    case "staff":
+                        showStaffPanel(primaryStage);
+                        break;
+                    case "customer":
+                        showCustomerPanel(primaryStage);
+                        break;
+                    default:
+                        errorLabel.setText("Unknown role. Please contact support.");
+                        break;
+                }
+            } else {
+                errorLabel.setText("Invalid email or password.");
+            }
+        });
+
+        // Layout: VBox to arrange the components vertically
+        VBox layout = new VBox(10);
+        layout.setStyle("-fx-padding: 20px;"); // Add padding
+        layout.getChildren().addAll(emailLabel, emailField, passwordLabel, passwordField, loginButton, errorLabel, forgotPasswordLink);
+
+        // Set scene and stage
+        Scene scene = new Scene(layout, 300, 250); // Set a default window size
+        primaryStage.setTitle("Car Rental Login");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    // Sample authentication method that returns the role based on email and password
+    private String authenticate(String email, String password) {
+        // For now, hardcoding the email and password checks
+        if (email.equals("admin@carental.com") && password.equals("admin123")) {
+            return "admin";
+        } else if (email.equals("staff@carental.com") && password.equals("staff123")) {
+            return "staff";
+        } else if (email.equals("customer@carental.com") && password.equals("customer123")) {
+            return "customer";
+        }
+        return null; // Invalid email or password
+    }
+
+    // Method to show the Admin Panel (replace this with actual Admin UI)
+    private void showAdminPanel(Stage primaryStage) {
+        Label adminLabel = new Label("Welcome to the Admin Panel!");
+        VBox adminLayout = new VBox(10);
+        adminLayout.getChildren().add(adminLabel);
+        Scene adminScene = new Scene(adminLayout, 300, 200);
+        primaryStage.setScene(adminScene);
+        primaryStage.setTitle("Admin Panel");
+    }
+
+    // Method to show the Staff Panel (replace this with actual Staff UI)
+    private void showStaffPanel(Stage primaryStage) {
+        Label staffLabel = new Label("Welcome to the Staff Panel!");
+        VBox staffLayout = new VBox(10);
+        staffLayout.getChildren().add(staffLabel);
+        Scene staffScene = new Scene(staffLayout, 300, 200);
+        primaryStage.setScene(staffScene);
+        primaryStage.setTitle("Staff Panel");
+    }
+
+    // Method to show the Customer Panel (replace this with actual Customer UI)
+    private void showCustomerPanel(Stage primaryStage) {
+        Label customerLabel = new Label("Welcome to the Customer Panel!");
+        VBox customerLayout = new VBox(10);
+        customerLayout.getChildren().add(customerLabel);
+        Scene customerScene = new Scene(customerLayout, 300, 200);
+        primaryStage.setScene(customerScene);
+        primaryStage.setTitle("Customer Panel");
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
